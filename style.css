@@ -1,0 +1,468 @@
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background: #f4f6f8;
+    color: #343A40;
+    font-family: "Open Sans", Arial, sans-serif;
+    line-height: 1.5;
+}
+
+.app-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 25px;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.app-header {
+    background: #1E3A5F;
+    color: white;
+    padding: 25px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.app-header h1 {
+    margin: 0 0 5px;
+    font-size: 28px;
+}
+
+.app-header p {
+    margin: 0;
+    opacity: 0.85;
+}
+
+
+/* =========================
+   BUTTONS
+========================= */
+
+.header-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    border: none;
+    border-radius: 6px;
+    padding: 11px 16px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 14px;
+    transition: 0.2s ease;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    opacity: 0.92;
+}
+
+.btn-pdf {
+    background: #FF6B35;
+    color: white;
+}
+
+.btn-word {
+    background: #ffffff;
+    color: #1E3A5F;
+}
+
+.btn-clear {
+    background: #dc3545;
+    color: white;
+}
+
+
+/* =========================
+   CARDS
+========================= */
+
+.card {
+    background: white;
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #eef1f4;
+    padding-bottom: 12px;
+}
+
+.section-title h2 {
+    margin: 0;
+    color: #1E3A5F;
+    font-size: 21px;
+}
+
+.section-number {
+    width: 34px;
+    height: 34px;
+    background: #FF6B35;
+    color: white;
+    border-radius: 50%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-weight: bold;
+}
+
+
+/* =========================
+   FORM
+========================= */
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 7px;
+    font-weight: 700;
+    color: #343A40;
+}
+
+input[type="text"],
+input[type="date"],
+select,
+textarea {
+    width: 100%;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    padding: 11px 12px;
+    font-size: 15px;
+    font-family: inherit;
+    background: #fff;
+    color: #343A40;
+    outline: none;
+}
+
+input[type="text"]:focus,
+input[type="date"]:focus,
+select:focus,
+textarea:focus {
+    border-color: #FF6B35;
+    box-shadow: 0 0 0 2px rgba(255, 107, 53, 0.12);
+}
+
+textarea {
+    resize: vertical;
+}
+
+
+/* =========================
+   OSHA BOX
+========================= */
+
+.osha-box {
+    background: #eaf2f8;
+    border-left: 5px solid #1E3A5F;
+    border-radius: 7px;
+    padding: 18px 20px;
+    margin-bottom: 20px;
+}
+
+.osha-title {
+    font-weight: 800;
+    color: #1E3A5F;
+    margin-bottom: 7px;
+}
+
+.osha-box p {
+    margin: 0;
+}
+
+
+/* =========================
+   CRITICAL ALERT
+========================= */
+
+.critical-alert {
+    background: #fff3cd;
+    border: 2px solid #FF6B35;
+    border-radius: 8px;
+    padding: 18px;
+    margin-bottom: 20px;
+}
+
+.critical-alert strong {
+    color: #9a3412;
+}
+
+.critical-alert p {
+    margin: 7px 0 0;
+}
+
+
+/* =========================
+   STATUS
+========================= */
+
+.status-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.status-option {
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    padding: 18px;
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    transition: 0.2s ease;
+}
+
+.status-option:hover {
+    border-color: #1E3A5F;
+}
+
+.status-option input {
+    accent-color: #1E3A5F;
+}
+
+.status-option span {
+    display: flex;
+    flex-direction: column;
+}
+
+.status-option strong {
+    font-size: 14px;
+}
+
+.status-option small {
+    color: #6c757d;
+    margin-top: 3px;
+}
+
+.status-option.safe {
+    border-left: 5px solid #198754;
+}
+
+.status-option.warning {
+    border-left: 5px solid #ffc107;
+}
+
+.status-option.danger {
+    border-left: 5px solid #dc3545;
+}
+
+
+/* =========================
+   CHECKLIST
+========================= */
+
+.checklist {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.checklist-header,
+.checklist-row {
+    display: grid;
+    grid-template-columns: 1fr 80px 80px 80px;
+    align-items: center;
+}
+
+.checklist-header {
+    background: #1E3A5F;
+    color: white;
+    font-weight: 700;
+    padding: 12px;
+    border-radius: 6px 6px 0 0;
+}
+
+.checklist-header > div:not(:first-child) {
+    text-align: center;
+}
+
+.checklist-row {
+    border: 1px solid #e4e7ea;
+    border-top: none;
+    padding: 13px 12px;
+    min-height: 58px;
+}
+
+.checklist-row > div:first-child {
+    padding-right: 15px;
+}
+
+.checklist-row label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.checklist-row input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+
+/* =========================
+   ATMOSPHERE
+========================= */
+
+.atmosphere-grid {
+    margin-bottom: 20px;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+.app-footer {
+    background: #1E3A5F;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    border-radius: 10px;
+    margin-top: 25px;
+}
+
+.app-footer p {
+    margin: 3px 0;
+}
+
+
+/* =========================
+   PRINT / PDF
+========================= */
+
+.pdf-mode {
+    background: white !important;
+}
+
+.pdf-mode .app-header {
+    border-radius: 0;
+}
+
+.pdf-mode .card {
+    box-shadow: none;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 850px) {
+
+    .app-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .status-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .header-actions {
+        width: 100%;
+    }
+
+    .btn {
+        flex: 1;
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    .app-container {
+        padding: 12px;
+    }
+
+    .app-header {
+        padding: 18px;
+    }
+
+    .app-header h1 {
+        font-size: 22px;
+    }
+
+    .card {
+        padding: 16px;
+    }
+
+    .section-title h2 {
+        font-size: 18px;
+    }
+
+    .checklist-header,
+    .checklist-row {
+        grid-template-columns: minmax(180px, 1fr) 55px 55px 55px;
+    }
+
+    .checklist {
+        overflow-x: auto;
+    }
+
+    .header-actions {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+    }
+}
+
+
+/* =========================
+   PDF PAGE BREAK
+========================= */
+
+.card,
+.osha-box,
+.critical-alert {
+    break-inside: avoid;
+    page-break-inside: avoid;
+}
+
+.section-title {
+    break-after: avoid;
+    page-break-after: avoid;
+}
