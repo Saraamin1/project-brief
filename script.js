@@ -1,476 +1,90 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener('DOMContentLoaded', () => {
 
-    const form = document.getElementById("inspectionForm");
-
-    const savePdfBtn = document.getElementById("savePdfBtn");
-    const saveWordBtn = document.getElementById("saveWordBtn");
-    const clearBtn = document.getElementById("clearBtn");
-
-    const STORAGE_KEY = "excavationSafetyInspectionData";
-
-
-    /* =========================
-       SAVE FORM TO LOCAL STORAGE
-    ========================= */
-
-    function saveFormData() {
-
-        const data = {};
-
-        const fields = form.querySelectorAll(
-            "input, select, textarea"
-        );
-
-        fields.forEach(function (field) {
-
-            if (field.type === "radio") {
-
-                if (field.checked) {
-                    data[field.name] = field.value;
-                }
-
-            } else {
-
-                data[field.name] = field.value;
-
-            }
-
+    // 1. SELECTABLE OVERALL STATUS BOXES
+    const statusBoxes = document.querySelectorAll('.selectable-box');
+    statusBoxes.forEach(box => {
+        box.addEventListener('click', () => {
+            const radio = box.querySelector('input[type="radio"]');
+            if (radio) radio.checked = true;
         });
+    });
 
-        localStorage.setItem(
-            STORAGE_KEY,
-            JSON.stringify(data)
-        );
-    }
-
-
-    /* =========================
-       LOAD FORM DATA
-    ========================= */
-
-    function loadFormData() {
-
-        const savedData = localStorage.getItem(
-            STORAGE_KEY
-        );
-
-        if (!savedData) {
-            return;
+    // 2. FORM RESET FUNCTIONALITY
+    const resetBtn = document.getElementById('resetBtn');
+    resetBtn.addEventListener('click', () => {
+        if (confirm('Are you sure you want to reset all form fields?')) {
+            document.getElementById('inspectionForm').reset();
         }
-
-        const data = JSON.parse(savedData);
-
-        const fields = form.querySelectorAll(
-            "input, select, textarea"
-        );
-
-        fields.forEach(function (field) {
-
-            if (!field.name) {
-                return;
-            }
-
-            if (field.type === "radio") {
-
-                field.checked =
-                    data[field.name] === field.value;
-
-            } else {
-
-                if (data[field.name] !== undefined) {
-                    field.value = data[field.name];
-                }
-
-            }
-
-        });
-
-    }
-
-
-    /* =========================
-       AUTO SAVE
-    ========================= */
-
-    form.addEventListener("input", function () {
-        saveFormData();
     });
 
-    form.addEventListener("change", function () {
-        saveFormData();
-    });
+    // 3. EXPORT TO PDF FUNCTIONALITY (html2pdf.js)
+    const downloadPdfBtn = document.getElementById('downloadPdfBtn');
+    downloadPdfBtn.addEventListener('click', () => {
+        const element = document.getElementById('formContent');
 
-
-    /* =========================
-       PDF
-    ========================= */
-
-    savePdfBtn.addEventListener("click", function () {
-
-        saveFormData();
-
-        const element = document.querySelector(
-            ".app-container"
-        );
-
-        const options = {
-
-            margin: 8,
-
-            filename:
-                "excavation-trenching-safety-inspection.pdf",
-
-            image: {
-                type: "jpeg",
-                quality: 0.98
-            },
-
-            html2canvas: {
-                scale: 2,
-                useCORS: true,
-                logging: false
-            },
-
-            jsPDF: {
-                unit: "mm",
-                format: "a4",
-                orientation: "portrait"
-            },
-
-            pagebreak: {
-                mode: [
-                    "avoid-all",
-                    "css",
-                    "legacy"
-                ]
-            }
-
+        // Options for html2pdf
+        const opt = {
+            margin:       [0.3, 0.3, 0.3, 0.3], // top, left, bottom, right in inches
+            filename:     'Excavation_Safety_Inspection.pdf',
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 2, useCORS: true, logging: false },
+            jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
         };
 
-
-        document.body.classList.add("pdf-mode");
-
-
-        html2pdf()
-            .set(options)
-            .from(element)
-            .save()
-            .finally(function () {
-
-                document.body.classList.remove(
-                    "pdf-mode"
-                );
-
-            });
-
+        // Trigger PDF generation
+        html2pdf().set(opt).from(element).save();
     });
 
+    // 4. EXPORT TO WORD FUNCTIONALITY (.doc)
+    const downloadWordBtn = document.getElementById('downloadWordBtn');
+    downloadWordBtn.addEventListener('click', () => {
+        // Clone form content to prepare static text for Word export
+        const element = document.getElementById('formContent').cloneNode(true);
 
-    /* =========================
-       WORD
-    ========================= */
-
-    saveWordBtn.addEventListener("click", function () {
-
-        saveFormData();
-
-        const container =
-            document.querySelector(".app-container");
-
-        const clone =
-            container.cloneNode(true);
-
-
-        /* Remove buttons */
-
-        const headerActions =
-            clone.querySelector(".header-actions");
-
-        if (headerActions) {
-            headerActions.remove();
-        }
-
-
-        /* Convert radio inputs to text */
-
-        const radios =
-            clone.querySelectorAll(
-                'input[type="radio"]'
-            );
-
-        radios.forEach(function (radio) {
-
-            const parent = radio.parentElement;
-
-            if (!parent) {
-                return;
-            }
-
-            const checked =
-                radio.checked;
-
-            if (checked) {
-
-                parent.innerHTML =
-                    "●";
-
-            } else {
-
-                parent.innerHTML =
-                    "○";
-
-            }
-
+        // Convert Input fields to text in Clone
+        const inputs = element.querySelectorAll('input[type="text"], input[type="date"], input[type="datetime-local"]');
+        inputs.forEach(input => {
+            const span = document.createElement('span');
+            span.style.borderBottom = "1px solid #343a40";
+            span.style.display = "inline-block";
+            span.style.minWidth = "120px";
+            span.style.padding = "2px 5px";
+            span.innerText = input.value || '___________';
+            input.parentNode.replaceChild(span, input);
         });
 
-
-        /* Convert input values */
-
-        const inputs =
-            clone.querySelectorAll(
-                "input, textarea, select"
-            );
-
-        inputs.forEach(function (field) {
-
-            if (
-                field.type === "radio"
-            ) {
-                return;
-            }
-
-            let value = "";
-
-            if (
-                field.tagName.toLowerCase() ===
-                "select"
-            ) {
-
-                value =
-                    field.options[
-                        field.selectedIndex
-                    ]?.text || "";
-
-            } else {
-
-                value =
-                    field.value || "";
-
-            }
-
-
-            const replacement =
-                document.createElement("span");
-
-            replacement.textContent =
-                value;
-
-            replacement.style.display =
-                "inline-block";
-
-            replacement.style.minWidth =
-                "150px";
-
-            replacement.style.borderBottom =
-                "1px solid #777";
-
-            replacement.style.padding =
-                "4px 2px";
-
-
-            field.parentNode.replaceChild(
-                replacement,
-                field
-            );
-
+        // Convert Textareas to text in Clone
+        const textareas = element.querySelectorAll('textarea');
+        textareas.forEach(textarea => {
+            const div = document.createElement('div');
+            div.style.border = "1px solid #6c757d";
+            div.style.padding = "8px";
+            div.style.minHeight = "80px";
+            div.innerText = textarea.value || '';
+            textarea.parentNode.replaceChild(div, textarea);
         });
 
+        // HTML Header and Footer for Microsoft Word Format
+        const headerHtml = "<html xmlns:o='urn:schemas-microsoft-com:office:office' " +
+            "xmlns:w='urn:schemas-microsoft-com:office:word' " +
+            "xmlns='http://www.w3.org/TR/REC-html40'>" +
+            "<head><meta charset='utf-8'><title>Safety Inspection</title></head><body>";
+        const footerHtml = "</body></html>";
+        
+        const sourceHTML = headerHtml + element.innerHTML + footerHtml;
 
-        const htmlContent = `
+        const blob = new Blob(['\ufeff' + sourceHTML], {
+            type: 'application/msword'
+        });
 
-<!DOCTYPE html>
-
-<html>
-
-<head>
-
-<meta charset="UTF-8">
-
-<title>
-Excavation & Trenching Safety Inspection
-</title>
-
-<style>
-
-body {
-    font-family: Arial, sans-serif;
-    color: #343A40;
-    line-height: 1.5;
-}
-
-.app-container {
-    max-width: 900px;
-    margin: auto;
-}
-
-.app-header {
-    background: #1E3A5F;
-    color: white;
-    padding: 20px;
-}
-
-.card {
-    border: 1px solid #ddd;
-    padding: 20px;
-    margin-bottom: 20px;
-}
-
-.section-title {
-    color: #1E3A5F;
-    border-bottom: 2px solid #ddd;
-    padding-bottom: 8px;
-}
-
-.osha-box {
-    background: #eef5fa;
-    border-left: 5px solid #1E3A5F;
-    padding: 15px;
-    margin-bottom: 20px;
-}
-
-.critical-alert {
-    background: #fff3cd;
-    border: 2px solid #FF6B35;
-    padding: 15px;
-    margin-bottom: 20px;
-}
-
-.checklist {
-    width: 100%;
-}
-
-.checklist-header,
-.checklist-row {
-    display: grid;
-    grid-template-columns: 1fr 60px 60px 60px;
-}
-
-.checklist-header {
-    background: #1E3A5F;
-    color: white;
-    padding: 10px;
-}
-
-.checklist-row {
-    border: 1px solid #ddd;
-    border-top: none;
-    padding: 10px;
-}
-
-.app-footer {
-    margin-top: 20px;
-    text-align: center;
-}
-
-</style>
-
-</head>
-
-<body>
-
-${clone.outerHTML}
-
-</body>
-
-</html>
-
-`;
-
-
-        const blob =
-            new Blob(
-                [htmlContent],
-                {
-                    type:
-                        "application/msword"
-                }
-            );
-
-
-        const url =
-            URL.createObjectURL(blob);
-
-
-        const link =
-            document.createElement("a");
-
-        link.href = url;
-
-        link.download =
-            "excavation-trenching-safety-inspection.doc";
-
-
-        document.body.appendChild(link);
-
-        link.click();
-
-        document.body.removeChild(link);
-
-
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'Excavation_Safety_Inspection.doc';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
         URL.revokeObjectURL(url);
-
     });
-
-
-    /* =========================
-       CLEAR FORM
-    ========================= */
-
-    clearBtn.addEventListener("click", function () {
-
-        const confirmation =
-            confirm(
-                "Are you sure you want to clear the entire form?"
-            );
-
-
-        if (!confirmation) {
-            return;
-        }
-
-
-        const fields =
-            form.querySelectorAll(
-                "input, select, textarea"
-            );
-
-
-        fields.forEach(function (field) {
-
-            if (field.type === "radio") {
-
-                field.checked = false;
-
-            } else {
-
-                field.value = "";
-
-            }
-
-        });
-
-
-        localStorage.removeItem(
-            STORAGE_KEY
-        );
-
-    });
-
-
-    /* =========================
-       INITIAL LOAD
-    ========================= */
-
-    loadFormData();
 
 });
