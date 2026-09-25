@@ -3,618 +3,400 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Excavation & Trenching Safety Inspection</title>
-
+    <!-- CSS Link -->
     <link rel="stylesheet" href="style.css">
-
-    <!-- PDF Library -->
+    <!-- html2pdf.js for PDF export -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
-
 <body>
 
-<div class="app-container">
-
-    <!-- Header -->
-    <header class="app-header">
-        <div>
-            <h1>Excavation & Trenching Safety Inspection</h1>
-            <p>OSHA Safety Inspection Form</p>
+    <!-- STICKY ACTION TOOLBAR -->
+    <div class="sticky-toolbar">
+        <div class="toolbar-container">
+            <div class="toolbar-title">Safety Inspection Form</div>
+            <div class="toolbar-actions">
+                <button type="button" class="btn btn-pdf" id="downloadPdfBtn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                    Download PDF
+                </button>
+                <button type="button" class="btn btn-word" id="downloadWordBtn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                    Download Word
+                </button>
+                <button type="button" class="btn btn-print" onclick="window.print()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                    Print
+                </button>
+                <button type="button" class="btn btn-reset" id="resetBtn">Reset</button>
+            </div>
         </div>
+    </div>
 
-        <div class="header-actions">
-            <button type="button" id="savePdfBtn" class="btn btn-pdf">
-                Save as PDF
-            </button>
-
-            <button type="button" id="saveWordBtn" class="btn btn-word">
-                Save as Word
-            </button>
-
-            <button type="button" id="clearBtn" class="btn btn-clear">
-                Clear Form
-            </button>
-        </div>
-    </header>
-
-
-    <main id="inspectionForm">
-
-        <!-- Project Information -->
-        <section class="card">
-            <div class="section-title">
-                <span class="section-number">1</span>
-                <h2>Project Information</h2>
+    <!-- MAIN FORM CONTAINER -->
+    <div class="form-container" id="formContent">
+        <form id="inspectionForm">
+            <!-- HEADER -->
+            <div class="header">
+                <h1>Excavation & Trenching Safety Inspection</h1>
+                <div class="header-info">
+                    <div class="info-field">
+                        <label class="info-label">Site/Project Name:</label>
+                        <input type="text" class="info-input" name="site_name" />
+                    </div>
+                    <div class="info-field">
+                        <label class="info-label">Inspection Date:</label>
+                        <input type="date" class="info-input date-input" name="inspection_date" />
+                    </div>
+                    <div class="info-field">
+                        <label class="info-label">Excavation Location/ID:</label>
+                        <input type="text" class="info-input" name="location_id" />
+                    </div>
+                    <div class="info-field">
+                        <label class="info-label">Maximum Depth:</label>
+                        <input type="text" class="info-input" placeholder="ft" name="max_depth" />
+                    </div>
+                    <div class="info-field">
+                        <label class="info-label">Soil Type:</label>
+                        <input type="text" class="info-input" placeholder="Type A, B, or C" name="soil_type" />
+                    </div>
+                    <div class="info-field">
+                        <label class="info-label">Weather Conditions:</label>
+                        <input type="text" class="info-input" name="weather" />
+                    </div>
+                </div>
             </div>
 
-            <div class="form-grid">
-
-                <div class="form-group">
-                    <label for="siteName">Site / Project Name</label>
-                    <input type="text" id="siteName" name="siteName">
+            <!-- INFO BOX -->
+            <div class="info-box">
+                <div class="info-text">
+                    <strong>OSHA Requirement (29 CFR 1926.651):</strong> Excavations must be inspected daily by a competent person before work begins and after: rainstorms, other hazard-increasing events, or any indications of possible cave-ins or slides.
                 </div>
-
-                <div class="form-group">
-                    <label for="inspectionDate">Inspection Date</label>
-                    <input type="date" id="inspectionDate" name="inspectionDate">
-                </div>
-
-                <div class="form-group">
-                    <label for="excavationLocation">
-                        Excavation Location / ID
-                    </label>
-                    <input type="text" id="excavationLocation" name="excavationLocation">
-                </div>
-
-                <div class="form-group">
-                    <label for="maximumDepth">
-                        Maximum Depth
-                    </label>
-                    <input type="text" id="maximumDepth" name="maximumDepth">
-                </div>
-
-                <div class="form-group">
-                    <label for="soilType">
-                        Soil Type
-                    </label>
-
-                    <select id="soilType" name="soilType">
-                        <option value="">Select Soil Type</option>
-                        <option value="Stable Rock">Stable Rock</option>
-                        <option value="Type A">Type A</option>
-                        <option value="Type B">Type B</option>
-                        <option value="Type C">Type C</option>
-                        <option value="Unknown">Unknown</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="weather">
-                        Weather Conditions
-                    </label>
-
-                    <input
-                        type="text"
-                        id="weather"
-                        name="weather"
-                        placeholder="Sunny, Rainy, Cloudy..."
-                    >
-                </div>
-
-            </div>
-        </section>
-
-
-        <!-- OSHA Requirement -->
-        <section class="osha-box">
-
-            <div class="osha-title">
-                OSHA Requirement (29 CFR 1926.651)
             </div>
 
-            <p>
-                Excavations must be inspected daily by a competent person
-                before work begins and after: rainstorms, other hazard-increasing
-                events, or any indications of possible cave-ins or slides.
-            </p>
-
-        </section>
-
-
-        <!-- Overall Status -->
-        <section class="card">
-
-            <div class="section-title">
-                <span class="section-number">2</span>
-                <h2>Overall Inspection Status</h2>
-            </div>
-
-            <div class="status-grid">
-
-                <label class="status-option safe">
-                    <input
-                        type="radio"
-                        name="overallStatus"
-                        value="SAFE - Work May Proceed"
-                    >
-                    <span>
-                        <strong>SAFE</strong>
-                        <small>Work May Proceed</small>
-                    </span>
+            <!-- STATUS SUMMARY -->
+            <div class="status-summary">
+                <label class="status-item selectable-box">
+                    <input type="radio" name="overall_status" value="SAFE" hidden>
+                    <span class="checkbox-large"></span>
+                    <span class="checkbox-label">SAFE - Work May Proceed</span>
                 </label>
-
-                <label class="status-option warning">
-                    <input
-                        type="radio"
-                        name="overallStatus"
-                        value="Corrections Required"
-                    >
-                    <span>
-                        <strong>CORRECTIONS REQUIRED</strong>
-                        <small>Correct Before Continuing</small>
-                    </span>
+                <label class="status-item selectable-box">
+                    <input type="radio" name="overall_status" value="CORRECTIONS" hidden>
+                    <span class="checkbox-large"></span>
+                    <span class="checkbox-label">Corrections Required</span>
                 </label>
-
-                <label class="status-option danger">
-                    <input
-                        type="radio"
-                        name="overallStatus"
-                        value="STOP WORK - Unsafe"
-                    >
-                    <span>
-                        <strong>STOP WORK</strong>
-                        <small>Unsafe Condition</small>
-                    </span>
+                <label class="status-item selectable-box">
+                    <input type="radio" name="overall_status" value="STOP" hidden>
+                    <span class="checkbox-large"></span>
+                    <span class="checkbox-label">STOP WORK - Unsafe</span>
                 </label>
-
             </div>
 
-        </section>
-
-
-        <!-- Critical Alert -->
-        <div class="critical-alert">
-
-            <strong>⚠ CRITICAL SAFETY REQUIREMENT</strong>
-
-            <p>
-                Protective systems are required for all excavations
-                5 feet or deeper (unless in stable rock).
-                <strong>DO NOT ENTER without proper cave-in protection!</strong>
-            </p>
-
-        </div>
-
-
-        <!-- Checklist -->
-        <section class="card">
-
-            <div class="section-title">
-                <span class="section-number">3</span>
-                <h2>Protective Systems</h2>
+            <!-- ALERT BOX -->
+            <div class="alert-box">
+                <div class="alert-text">⚠ CRITICAL: Protective systems required for all excavations 5 feet or deeper (unless in stable rock). DO NOT ENTER without proper cave-in protection!</div>
             </div>
 
-            <div class="checklist">
-
-                <div class="checklist-header">
-                    <div>Inspection Item</div>
-                    <div>OK</div>
-                    <div>Issue</div>
-                    <div>N/A</div>
+            <!-- SECTION 1 -->
+            <h2>1. Protective Systems (Cave-in Protection)</h2>
+            <div class="checklist-section">
+                <div class="checklist-item">
+                    <div class="checkbox-container">
+                        <label class="checkbox-option"><input type="radio" name="sec1_1" value="OK"><span class="checkbox-small"></span><span class="checkbox-option-label">OK</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec1_1" value="Issue"><span class="checkbox-small"></span><span class="checkbox-option-label">Issue</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec1_1" value="NA"><span class="checkbox-small"></span><span class="checkbox-option-label">N/A</span></label>
+                    </div>
+                    <div class="item-text">Protective system in place (sloping, shoring, or shielding) for excavations 5+ ft deep</div>
                 </div>
-
-                <div class="checklist-row">
-                    <div>Protective system is provided where required</div>
-                    <label><input type="radio" name="item1" value="OK"></label>
-                    <label><input type="radio" name="item1" value="Issue"></label>
-                    <label><input type="radio" name="item1" value="N/A"></label>
+                <div class="checklist-item">
+                    <div class="checkbox-container">
+                        <label class="checkbox-option"><input type="radio" name="sec1_2" value="OK"><span class="checkbox-small"></span><span class="checkbox-option-label">OK</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec1_2" value="Issue"><span class="checkbox-small"></span><span class="checkbox-option-label">Issue</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec1_2" value="NA"><span class="checkbox-small"></span><span class="checkbox-option-label">N/A</span></label>
+                    </div>
+                    <div class="item-text">Sloping/benching at correct angle for soil type (Type A: 3/4:1, Type B: 1:1, Type C: 1.5:1)</div>
                 </div>
-
-                <div class="checklist-row">
-                    <div>Sloping / benching system is properly installed</div>
-                    <label><input type="radio" name="item2" value="OK"></label>
-                    <label><input type="radio" name="item2" value="Issue"></label>
-                    <label><input type="radio" name="item2" value="N/A"></label>
+                <div class="checklist-item">
+                    <div class="checkbox-container">
+                        <label class="checkbox-option"><input type="radio" name="sec1_3" value="OK"><span class="checkbox-small"></span><span class="checkbox-option-label">OK</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec1_3" value="Issue"><span class="checkbox-small"></span><span class="checkbox-option-label">Issue</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec1_3" value="NA"><span class="checkbox-small"></span><span class="checkbox-option-label">N/A</span></label>
+                    </div>
+                    <div class="item-text">Shoring/shielding system properly installed per manufacturer specifications</div>
                 </div>
-
-                <div class="checklist-row">
-                    <div>Shoring system is installed according to requirements</div>
-                    <label><input type="radio" name="item3" value="OK"></label>
-                    <label><input type="radio" name="item3" value="Issue"></label>
-                    <label><input type="radio" name="item3" value="N/A"></label>
+                <div class="checklist-item">
+                    <div class="checkbox-container">
+                        <label class="checkbox-option"><input type="radio" name="sec1_4" value="OK"><span class="checkbox-small"></span><span class="checkbox-option-label">OK</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec1_4" value="Issue"><span class="checkbox-small"></span><span class="checkbox-option-label">Issue</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec1_4" value="NA"><span class="checkbox-small"></span><span class="checkbox-option-label">N/A</span></label>
+                    </div>
+                    <div class="item-text">Trench box/shield extends at least 18 inches above excavation floor</div>
                 </div>
-
-                <div class="checklist-row">
-                    <div>Shield / trench box is properly installed</div>
-                    <label><input type="radio" name="item4" value="OK"></label>
-                    <label><input type="radio" name="item4" value="Issue"></label>
-                    <label><input type="radio" name="item4" value="N/A"></label>
+                <div class="checklist-item">
+                    <div class="checkbox-container">
+                        <label class="checkbox-option"><input type="radio" name="sec1_5" value="OK"><span class="checkbox-small"></span><span class="checkbox-option-label">OK</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec1_5" value="Issue"><span class="checkbox-small"></span><span class="checkbox-option-label">Issue</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec1_5" value="NA"><span class="checkbox-small"></span><span class="checkbox-option-label">N/A</span></label>
+                    </div>
+                    <div class="item-text">No damage, cracks, or deterioration in shoring/shielding components</div>
                 </div>
-
-                <div class="checklist-row">
-                    <div>Protective system extends adequately above excavation</div>
-                    <label><input type="radio" name="item5" value="OK"></label>
-                    <label><input type="radio" name="item5" value="Issue"></label>
-                    <label><input type="radio" name="item5" value="N/A"></label>
-                </div>
-
             </div>
 
-        </section>
-
-
-        <!-- Access & Egress -->
-        <section class="card">
-
-            <div class="section-title">
-                <span class="section-number">4</span>
-                <h2>Access & Egress</h2>
+            <!-- SECTION 2 -->
+            <h2>2. Access & Egress</h2>
+            <div class="checklist-section">
+                <div class="checklist-item">
+                    <div class="checkbox-container">
+                        <label class="checkbox-option"><input type="radio" name="sec2_1" value="OK"><span class="checkbox-small"></span><span class="checkbox-option-label">OK</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec2_1" value="Issue"><span class="checkbox-small"></span><span class="checkbox-option-label">Issue</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec2_1" value="NA"><span class="checkbox-small"></span><span class="checkbox-option-label">N/A</span></label>
+                    </div>
+                    <div class="item-text">Ladder, ramp, or steps provided in excavations 4+ ft deep</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checkbox-container">
+                        <label class="checkbox-option"><input type="radio" name="sec2_2" value="OK"><span class="checkbox-small"></span><span class="checkbox-option-label">OK</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec2_2" value="Issue"><span class="checkbox-small"></span><span class="checkbox-option-label">Issue</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec2_2" value="NA"><span class="checkbox-small"></span><span class="checkbox-option-label">N/A</span></label>
+                    </div>
+                    <div class="item-text">Access within 25 ft of lateral travel for workers in trench</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checkbox-container">
+                        <label class="checkbox-option"><input type="radio" name="sec2_3" value="OK"><span class="checkbox-small"></span><span class="checkbox-option-label">OK</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec2_3" value="Issue"><span class="checkbox-small"></span><span class="checkbox-option-label">Issue</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec2_3" value="NA"><span class="checkbox-small"></span><span class="checkbox-option-label">N/A</span></label>
+                    </div>
+                    <div class="item-text">Ladder secured and extends at least 3 ft above excavation edge</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checkbox-container">
+                        <label class="checkbox-option"><input type="radio" name="sec2_4" value="OK"><span class="checkbox-small"></span><span class="checkbox-option-label">OK</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec2_4" value="Issue"><span class="checkbox-small"></span><span class="checkbox-option-label">Issue</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec2_4" value="NA"><span class="checkbox-small"></span><span class="checkbox-option-label">N/A</span></label>
+                    </div>
+                    <div class="item-text">No structural ramps/crossovers used by equipment approved for such use</div>
+                </div>
             </div>
 
-            <div class="checklist">
-
-                <div class="checklist-header">
-                    <div>Inspection Item</div>
-                    <div>OK</div>
-                    <div>Issue</div>
-                    <div>N/A</div>
+            <!-- SECTION 3 -->
+            <h2>3. Atmospheric Hazards (Excavations 4+ ft deep)</h2>
+            <div class="checklist-section">
+                <div class="checklist-item">
+                    <div class="checkbox-container">
+                        <label class="checkbox-option"><input type="radio" name="sec3_1" value="OK"><span class="checkbox-small"></span><span class="checkbox-option-label">OK</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec3_1" value="Issue"><span class="checkbox-small"></span><span class="checkbox-option-label">Issue</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec3_1" value="NA"><span class="checkbox-small"></span><span class="checkbox-option-label">N/A</span></label>
+                    </div>
+                    <div class="item-text">Atmospheric testing conducted (if hazardous atmosphere possible)</div>
                 </div>
-
-                <div class="checklist-row">
-                    <div>Safe access and egress are provided</div>
-                    <label><input type="radio" name="item6" value="OK"></label>
-                    <label><input type="radio" name="item6" value="Issue"></label>
-                    <label><input type="radio" name="item6" value="N/A"></label>
+                <div class="checklist-item">
+                    <div class="checkbox-container">
+                        <label class="checkbox-option"><input type="radio" name="sec3_2" value="OK"><span class="checkbox-small"></span><span class="checkbox-option-label">OK</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec3_2" value="Issue"><span class="checkbox-small"></span><span class="checkbox-option-label">Issue</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec3_2" value="NA"><span class="checkbox-small"></span><span class="checkbox-option-label">N/A</span></label>
+                    </div>
+                    <div class="item-text">Adequate ventilation provided (if required)</div>
                 </div>
-
-                <div class="checklist-row">
-                    <div>Ladders are secured and extend sufficiently</div>
-                    <label><input type="radio" name="item7" value="OK"></label>
-                    <label><input type="radio" name="item7" value="Issue"></label>
-                    <label><input type="radio" name="item7" value="N/A"></label>
+                <div class="checklist-item">
+                    <div class="checkbox-container">
+                        <label class="checkbox-option"><input type="radio" name="sec3_3" value="OK"><span class="checkbox-small"></span><span class="checkbox-option-label">OK</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec3_3" value="Issue"><span class="checkbox-small"></span><span class="checkbox-option-label">Issue</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec3_3" value="NA"><span class="checkbox-small"></span><span class="checkbox-option-label">N/A</span></label>
+                    </div>
+                    <div class="item-text">No water accumulation (or pumping equipment in use)</div>
                 </div>
-
-                <div class="checklist-row">
-                    <div>Access is within required travel distance</div>
-                    <label><input type="radio" name="item8" value="OK"></label>
-                    <label><input type="radio" name="item8" value="Issue"></label>
-                    <label><input type="radio" name="item8" value="N/A"></label>
-                </div>
-
-                <div class="checklist-row">
-                    <div>Walkways are provided where required</div>
-                    <label><input type="radio" name="item9" value="OK"></label>
-                    <label><input type="radio" name="item9" value="Issue"></label>
-                    <label><input type="radio" name="item9" value="N/A"></label>
-                </div>
-
             </div>
 
-        </section>
-
-
-        <!-- Atmospheric Hazards -->
-        <section class="card">
-
-            <div class="section-title">
-                <span class="section-number">5</span>
-                <h2>Atmospheric Hazards</h2>
+            <div class="atmospheric-grid">
+                <div class="info-field">
+                    <label class="info-label">Oxygen (O2):</label>
+                    <input type="text" class="info-input" placeholder="19.5-23.5%" name="oxygen" />
+                </div>
+                <div class="info-field">
+                    <label class="info-label">LEL:</label>
+                    <input type="text" class="info-input" placeholder="<10%" name="lel" />
+                </div>
+                <div class="info-field">
+                    <label class="info-label">H2S:</label>
+                    <input type="text" class="info-input" placeholder="ppm" name="h2s" />
+                </div>
+                <div class="info-field">
+                    <label class="info-label">CO:</label>
+                    <input type="text" class="info-input" placeholder="ppm" name="co" />
+                </div>
             </div>
 
-            <div class="form-grid atmosphere-grid">
-
-                <div class="form-group">
-                    <label for="oxygen">O₂ (%)</label>
-                    <input type="text" id="oxygen" name="oxygen">
+            <!-- SECTION 4 -->
+            <h2>4. Edge Protection & Spoil Piles</h2>
+            <div class="checklist-section">
+                <div class="checklist-item">
+                    <div class="checkbox-container">
+                        <label class="checkbox-option"><input type="radio" name="sec4_1" value="OK"><span class="checkbox-small"></span><span class="checkbox-option-label">OK</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec4_1" value="Issue"><span class="checkbox-small"></span><span class="checkbox-option-label">Issue</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec4_1" value="NA"><span class="checkbox-small"></span><span class="checkbox-option-label">N/A</span></label>
+                    </div>
+                    <div class="item-text">Excavation edges barricaded to prevent workers/equipment from falling in</div>
                 </div>
-
-                <div class="form-group">
-                    <label for="lel">LEL (%)</label>
-                    <input type="text" id="lel" name="lel">
+                <div class="checklist-item">
+                    <div class="checkbox-container">
+                        <label class="checkbox-option"><input type="radio" name="sec4_2" value="OK"><span class="checkbox-small"></span><span class="checkbox-option-label">OK</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec4_2" value="Issue"><span class="checkbox-small"></span><span class="checkbox-option-label">Issue</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec4_2" value="NA"><span class="checkbox-small"></span><span class="checkbox-option-label">N/A</span></label>
+                    </div>
+                    <div class="item-text">Spoil piles set back at least 2 ft from excavation edge</div>
                 </div>
-
-                <div class="form-group">
-                    <label for="h2s">H₂S (ppm)</label>
-                    <input type="text" id="h2s" name="h2s">
+                <div class="checklist-item">
+                    <div class="checkbox-container">
+                        <label class="checkbox-option"><input type="radio" name="sec4_3" value="OK"><span class="checkbox-small"></span><span class="checkbox-option-label">OK</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec4_3" value="Issue"><span class="checkbox-small"></span><span class="checkbox-option-label">Issue</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec4_3" value="NA"><span class="checkbox-small"></span><span class="checkbox-option-label">N/A</span></label>
+                    </div>
+                    <div class="item-text">Materials, equipment kept away from excavation edge (no surcharge loads)</div>
                 </div>
-
-                <div class="form-group">
-                    <label for="co">CO (ppm)</label>
-                    <input type="text" id="co" name="co">
+                <div class="checklist-item">
+                    <div class="checkbox-container">
+                        <label class="checkbox-option"><input type="radio" name="sec4_4" value="OK"><span class="checkbox-small"></span><span class="checkbox-option-label">OK</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec4_4" value="Issue"><span class="checkbox-small"></span><span class="checkbox-option-label">Issue</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec4_4" value="NA"><span class="checkbox-small"></span><span class="checkbox-option-label">N/A</span></label>
+                    </div>
+                    <div class="item-text">Warning signs posted (e.g., "DANGER - OPEN EXCAVATION")</div>
                 </div>
-
             </div>
 
-            <div class="checklist">
-
-                <div class="checklist-header">
-                    <div>Inspection Item</div>
-                    <div>OK</div>
-                    <div>Issue</div>
-                    <div>N/A</div>
+            <!-- SECTION 5 -->
+            <h2>5. Adjacent Structures & Underground Utilities</h2>
+            <div class="checklist-section">
+                <div class="checklist-item">
+                    <div class="checkbox-container">
+                        <label class="checkbox-option"><input type="radio" name="sec5_1" value="OK"><span class="checkbox-small"></span><span class="checkbox-option-label">OK</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec5_1" value="Issue"><span class="checkbox-small"></span><span class="checkbox-option-label">Issue</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec5_1" value="NA"><span class="checkbox-small"></span><span class="checkbox-option-label">N/A</span></label>
+                    </div>
+                    <div class="item-text">Underground utilities located prior to excavation (call 811)</div>
                 </div>
-
-                <div class="checklist-row">
-                    <div>Atmospheric testing performed when required</div>
-                    <label><input type="radio" name="item10" value="OK"></label>
-                    <label><input type="radio" name="item10" value="Issue"></label>
-                    <label><input type="radio" name="item10" value="N/A"></label>
+                <div class="checklist-item">
+                    <div class="checkbox-container">
+                        <label class="checkbox-option"><input type="radio" name="sec5_2" value="OK"><span class="checkbox-small"></span><span class="checkbox-option-label">OK</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec5_2" value="Issue"><span class="checkbox-small"></span><span class="checkbox-option-label">Issue</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec5_2" value="NA"><span class="checkbox-small"></span><span class="checkbox-option-label">N/A</span></label>
+                    </div>
+                    <div class="item-text">Utilities marked and protected (hand digging within tolerance zone)</div>
                 </div>
-
-                <div class="checklist-row">
-                    <div>Oxygen level is within acceptable range</div>
-                    <label><input type="radio" name="item11" value="OK"></label>
-                    <label><input type="radio" name="item11" value="Issue"></label>
-                    <label><input type="radio" name="item11" value="N/A"></label>
+                <div class="checklist-item">
+                    <div class="checkbox-container">
+                        <label class="checkbox-option"><input type="radio" name="sec5_3" value="OK"><span class="checkbox-small"></span><span class="checkbox-option-label">OK</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec5_3" value="Issue"><span class="checkbox-small"></span><span class="checkbox-option-label">Issue</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec5_3" value="NA"><span class="checkbox-small"></span><span class="checkbox-option-label">N/A</span></label>
+                    </div>
+                    <div class="item-text">Adjacent structures supported/protected as needed (shoring, underpinning)</div>
                 </div>
-
-                <div class="checklist-row">
-                    <div>Hazardous gases are controlled</div>
-                    <label><input type="radio" name="item12" value="OK"></label>
-                    <label><input type="radio" name="item12" value="Issue"></label>
-                    <label><input type="radio" name="item12" value="N/A"></label>
+                <div class="checklist-item">
+                    <div class="checkbox-container">
+                        <label class="checkbox-option"><input type="radio" name="sec5_4" value="OK"><span class="checkbox-small"></span><span class="checkbox-option-label">OK</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec5_4" value="Issue"><span class="checkbox-small"></span><span class="checkbox-option-label">Issue</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec5_4" value="NA"><span class="checkbox-small"></span><span class="checkbox-option-label">N/A</span></label>
+                    </div>
+                    <div class="item-text">No signs of stress, movement, or instability in adjacent structures</div>
                 </div>
-
             </div>
 
-        </section>
-
-
-        <!-- Edge Protection -->
-        <section class="card">
-
-            <div class="section-title">
-                <span class="section-number">6</span>
-                <h2>Edge Protection & Spoil Piles</h2>
+            <!-- SECTION 6 -->
+            <h2>6. Environmental & Site Conditions</h2>
+            <div class="checklist-section">
+                <div class="checklist-item">
+                    <div class="checkbox-container">
+                        <label class="checkbox-option"><input type="radio" name="sec6_1" value="OK"><span class="checkbox-small"></span><span class="checkbox-option-label">OK</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec6_1" value="Issue"><span class="checkbox-small"></span><span class="checkbox-option-label">Issue</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec6_1" value="NA"><span class="checkbox-small"></span><span class="checkbox-option-label">N/A</span></label>
+                    </div>
+                    <div class="item-text">No signs of cave-ins, cracks, or sloughing in trench walls</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checkbox-container">
+                        <label class="checkbox-option"><input type="radio" name="sec6_2" value="OK"><span class="checkbox-small"></span><span class="checkbox-option-label">OK</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec6_2" value="Issue"><span class="checkbox-small"></span><span class="checkbox-option-label">Issue</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec6_2" value="NA"><span class="checkbox-small"></span><span class="checkbox-option-label">N/A</span></label>
+                    </div>
+                    <div class="item-text">No water accumulation or seepage into excavation</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checkbox-container">
+                        <label class="checkbox-option"><input type="radio" name="sec6_3" value="OK"><span class="checkbox-small"></span><span class="checkbox-option-label">OK</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec6_3" value="Issue"><span class="checkbox-small"></span><span class="checkbox-option-label">Issue</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec6_3" value="NA"><span class="checkbox-small"></span><span class="checkbox-option-label">N/A</span></label>
+                    </div>
+                    <div class="item-text">Inspection conducted after rainstorm or weather event</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checkbox-container">
+                        <label class="checkbox-option"><input type="radio" name="sec6_4" value="OK"><span class="checkbox-small"></span><span class="checkbox-option-label">OK</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec6_4" value="Issue"><span class="checkbox-small"></span><span class="checkbox-option-label">Issue</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec6_4" value="NA"><span class="checkbox-small"></span><span class="checkbox-option-label">N/A</span></label>
+                    </div>
+                    <div class="item-text">Soil conditions consistent with initial classification</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checkbox-container">
+                        <label class="checkbox-option"><input type="radio" name="sec6_5" value="OK"><span class="checkbox-small"></span><span class="checkbox-option-label">OK</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec6_5" value="Issue"><span class="checkbox-small"></span><span class="checkbox-option-label">Issue</span></label>
+                        <label class="checkbox-option"><input type="radio" name="sec6_5" value="NA"><span class="checkbox-small"></span><span class="checkbox-option-label">N/A</span></label>
+                    </div>
+                    <div class="item-text">Vibration or equipment operation not affecting excavation stability</div>
+                </div>
             </div>
 
-            <div class="checklist">
-
-                <div class="checklist-header">
-                    <div>Inspection Item</div>
-                    <div>OK</div>
-                    <div>Issue</div>
-                    <div>N/A</div>
-                </div>
-
-                <div class="checklist-row">
-                    <div>Spoil piles are kept away from excavation edge</div>
-                    <label><input type="radio" name="item13" value="OK"></label>
-                    <label><input type="radio" name="item13" value="Issue"></label>
-                    <label><input type="radio" name="item13" value="N/A"></label>
-                </div>
-
-                <div class="checklist-row">
-                    <div>Materials and equipment are kept away from edge</div>
-                    <label><input type="radio" name="item14" value="OK"></label>
-                    <label><input type="radio" name="item14" value="Issue"></label>
-                    <label><input type="radio" name="item14" value="N/A"></label>
-                </div>
-
-                <div class="checklist-row">
-                    <div>Guardrails / barricades are installed where required</div>
-                    <label><input type="radio" name="item15" value="OK"></label>
-                    <label><input type="radio" name="item15" value="Issue"></label>
-                    <label><input type="radio" name="item15" value="N/A"></label>
-                </div>
-
-                <div class="checklist-row">
-                    <div>Excavation edge is clearly marked</div>
-                    <label><input type="radio" name="item16" value="OK"></label>
-                    <label><input type="radio" name="item16" value="Issue"></label>
-                    <label><input type="radio" name="item16" value="N/A"></label>
-                </div>
-
+            <!-- OBSERVATIONS & NOTES -->
+            <div class="notes-section">
+                <h3>Hazards Identified & Corrective Actions Taken</h3>
+                <textarea class="notes-area" name="notes" placeholder="Document any hazards, deficiencies, corrective actions, or re-inspection required..."></textarea>
             </div>
 
-        </section>
+            <!-- SIGNATURE SECTION -->
+            <div class="signature-section">
+                <div class="signature-box">
+                    <span class="signature-label">Competent Person Signature:</span>
+                    <div class="signature-line"></div>
+                    <div class="info-field" style="margin-top: 12pt;">
+                        <label class="info-label">Print Name & Certification:</label>
+                        <input type="text" class="info-input" name="competent_name" />
+                    </div>
+                    <div class="info-field">
+                        <label class="info-label">Date & Time:</label>
+                        <input type="datetime-local" class="info-input date-input" name="competent_date" />
+                    </div>
+                </div>
 
-
-        <!-- Adjacent Structures -->
-        <section class="card">
-
-            <div class="section-title">
-                <span class="section-number">7</span>
-                <h2>Adjacent Structures & Underground Utilities</h2>
+                <div class="signature-box">
+                    <span class="signature-label">Site Supervisor Review:</span>
+                    <div class="signature-line"></div>
+                    <div class="info-field" style="margin-top: 12pt;">
+                        <label class="info-label">Print Name:</label>
+                        <input type="text" class="info-input" name="supervisor_name" />
+                    </div>
+                    <div class="info-field">
+                        <label class="info-label">Date:</label>
+                        <input type="date" class="info-input date-input" name="supervisor_date" />
+                    </div>
+                </div>
             </div>
 
-            <div class="checklist">
-
-                <div class="checklist-header">
-                    <div>Inspection Item</div>
-                    <div>OK</div>
-                    <div>Issue</div>
-                    <div>N/A</div>
+            <!-- FOOTER -->
+            <div class="footer">
+                <div class="footer-grid">
+                    <div>Page 1 of 1</div>
+                    <div>Excavation & Trenching Safety Inspection</div>
+                    <div>Version 1.0 - 2026</div>
                 </div>
-
-                <div class="checklist-row">
-                    <div>Adjacent structures are adequately supported</div>
-                    <label><input type="radio" name="item17" value="OK"></label>
-                    <label><input type="radio" name="item17" value="Issue"></label>
-                    <label><input type="radio" name="item17" value="N/A"></label>
+                <div style="margin-top: 8pt; font-size: 7pt;">
+                    Aligned with OSHA 29 CFR 1926.651 - Excavations. Daily competent person inspections required before each shift and after events that could increase hazards. Protective systems mandatory for excavations 5+ ft deep (unless entirely in stable rock).
                 </div>
-
-                <div class="checklist-row">
-                    <div>Underground utilities have been identified</div>
-                    <label><input type="radio" name="item18" value="OK"></label>
-                    <label><input type="radio" name="item18" value="Issue"></label>
-                    <label><input type="radio" name="item18" value="N/A"></label>
-                </div>
-
-                <div class="checklist-row">
-                    <div>Utilities are protected during excavation</div>
-                    <label><input type="radio" name="item19" value="OK"></label>
-                    <label><input type="radio" name="item19" value="Issue"></label>
-                    <label><input type="radio" name="item19" value="N/A"></label>
-                </div>
-
-                <div class="checklist-row">
-                    <div>Excavation near utilities is controlled</div>
-                    <label><input type="radio" name="item20" value="OK"></label>
-                    <label><input type="radio" name="item20" value="Issue"></label>
-                    <label><input type="radio" name="item20" value="N/A"></label>
-                </div>
-
             </div>
+        </form>
+    </div>
 
-        </section>
-
-
-        <!-- Environmental -->
-        <section class="card">
-
-            <div class="section-title">
-                <span class="section-number">8</span>
-                <h2>Environmental & Site Conditions</h2>
-            </div>
-
-            <div class="checklist">
-
-                <div class="checklist-header">
-                    <div>Inspection Item</div>
-                    <div>OK</div>
-                    <div>Issue</div>
-                    <div>N/A</div>
-                </div>
-
-                <div class="checklist-row">
-                    <div>Rain / water accumulation is controlled</div>
-                    <label><input type="radio" name="item21" value="OK"></label>
-                    <label><input type="radio" name="item21" value="Issue"></label>
-                    <label><input type="radio" name="item21" value="N/A"></label>
-                </div>
-
-                <div class="checklist-row">
-                    <div>Excavation is free from standing water</div>
-                    <label><input type="radio" name="item22" value="OK"></label>
-                    <label><input type="radio" name="item22" value="Issue"></label>
-                    <label><input type="radio" name="item22" value="N/A"></label>
-                </div>
-
-                <div class="checklist-row">
-                    <div>Weather conditions are suitable for work</div>
-                    <label><input type="radio" name="item23" value="OK"></label>
-                    <label><input type="radio" name="item23" value="Issue"></label>
-                    <label><input type="radio" name="item23" value="N/A"></label>
-                </div>
-
-                <div class="checklist-row">
-                    <div>Excavation walls show no signs of movement</div>
-                    <label><input type="radio" name="item24" value="OK"></label>
-                    <label><input type="radio" name="item24" value="Issue"></label>
-                    <label><input type="radio" name="item24" value="N/A"></label>
-                </div>
-
-                <div class="checklist-row">
-                    <div>Competent person has completed inspection</div>
-                    <label><input type="radio" name="item25" value="OK"></label>
-                    <label><input type="radio" name="item25" value="Issue"></label>
-                    <label><input type="radio" name="item25" value="N/A"></label>
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- Notes -->
-        <section class="card">
-
-            <div class="section-title">
-                <span class="section-number">9</span>
-                <h2>Notes & Corrective Actions</h2>
-            </div>
-
-            <textarea
-                id="notes"
-                name="notes"
-                rows="7"
-                placeholder="Enter observations, deficiencies, corrective actions, or additional notes..."
-            ></textarea>
-
-        </section>
-
-
-        <!-- Signatures -->
-        <section class="card">
-
-            <div class="section-title">
-                <span class="section-number">10</span>
-                <h2>Signatures</h2>
-            </div>
-
-            <div class="form-grid">
-
-                <div class="form-group">
-                    <label for="inspectorName">
-                        Inspector / Competent Person
-                    </label>
-
-                    <input
-                        type="text"
-                        id="inspectorName"
-                        name="inspectorName"
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label for="inspectorSignature">
-                        Inspector Signature
-                    </label>
-
-                    <input
-                        type="text"
-                        id="inspectorSignature"
-                        name="inspectorSignature"
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label for="supervisorName">
-                        Supervisor / Manager
-                    </label>
-
-                    <input
-                        type="text"
-                        id="supervisorName"
-                        name="supervisorName"
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label for="supervisorSignature">
-                        Supervisor Signature
-                    </label>
-
-                    <input
-                        type="text"
-                        id="supervisorSignature"
-                        name="supervisorSignature"
-                    >
-                </div>
-
-            </div>
-
-        </section>
-
-    </main>
-
-
-    <footer class="app-footer">
-        <p>
-            Excavation & Trenching Safety Inspection
-        </p>
-
-        <p>
-            OSHA 29 CFR 1926.651
-        </p>
-    </footer>
-
-</div>
-
-
-<script src="script.js"></script>
-
+    <!-- JS Link -->
+    <script src="script.js"></script>
 </body>
 </html>
